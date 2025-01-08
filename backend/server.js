@@ -2,14 +2,21 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-
+require("dotenv").config(); //
 const app = express();
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
 
-
+const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 
 
 // Middleware
