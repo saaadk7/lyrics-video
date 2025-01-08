@@ -62,7 +62,7 @@ router.post("/", (req, res) => {
 
     if (subtitlesPath) {
       filters.push(
-        `[out]subtitles=${subtitlesPath}:force_style='Fontsize=36,PrimaryColour=&HFFFFFF&,Alignment=3'[final]`
+        `[out]subtitles=${subtitlesPath}:force_style='Fontsize=36,PrimaryColour=&HFFFFFF&,Alignment=4'[final]`
       );
     }
 
