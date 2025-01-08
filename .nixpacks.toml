@@ -22,7 +22,7 @@ commands = ["node backend/server.js"]
 
 [dependencies]
 packages = ["python3"]
-cache = true
+# cache = true
 
 [variables]
 
