@@ -76,19 +76,40 @@ router.post("/", (req, res) => {
       .save(outputPath)
       .on("end", () => {
         console.log("Video processing complete:", outputPath);
-
+      
+        if (fs.existsSync(outputPath)) {
+          console.log("Output video exists:", outputPath);
+        } else {
+          console.error("Output video not found:", outputPath);
+        }
+      
         // Cleanup
         fs.unlink(videoPath, (err) => {
-          if (err) console.error("Error deleting video:", err.message);
+          if (err) {
+            console.error("Error deleting video:", err.message);
+          } else {
+            console.log("Input video deleted:", videoPath);
+          }
         });
+      
         if (subtitlesPath) {
           fs.unlink(subtitlesPath, (err) => {
-            if (err) console.error("Error deleting subtitles:", err.message);
+            if (err) {
+              console.error("Error deleting subtitles:", err.message);
+            } else {
+              console.log("Subtitles file deleted:", subtitlesPath);
+            }
           });
         }
-
-        res.json({ videoUrl: `/output/${path.basename(outputPath)}` });
+      
+        // Send the video URL to the frontend
+        const videoUrl = `/output/${path.basename(outputPath)}`;
+        console.log("Sending video URL to frontend:", videoUrl);
+      
+        res.json({ videoUrl });
       })
+     
+      
       .on("error", (err) => {
         console.error("FFmpeg error:", err.message);
         res.status(500).json({ error: "Error processing video with FFmpeg", details: err.message });

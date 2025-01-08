@@ -43,24 +43,32 @@ function App() {
     setError("");
     setVideoUrl("");
     setSuccessMessage("");
-
+  
     if (!validated) {
       setError("Please validate the YouTube URL first.");
       setLoading(false);
       return;
     }
-
+  
     try {
+      // Send the request to process the video
       const response = await axios.post(`${API_BASE_URL}/api/process`, {
         youtubeURL,
       });
-
+  
+      console.log("Video URL from backend:", response.data.videoUrl); // Debugging log
+  
       if (response.data.videoUrl) {
-        setVideoUrl(`${API_BASE_URL}${response.data.videoUrl}`);
+        // Construct the full video URL using API base URL
+        const fullVideoUrl = `${API_BASE_URL}${response.data.videoUrl}`;
+        console.log("Full video URL constructed:", fullVideoUrl);
+  
+        setVideoUrl(fullVideoUrl);
         setError("");
         setSuccessMessage("Video processed successfully! You can download it below.");
       } else {
         setError("Failed to process the video. Please try again.");
+        console.warn("Response from backend did not include a valid video URL.");
       }
     } catch (error) {
       console.error("Error processing video:", error);
@@ -69,6 +77,7 @@ function App() {
       setLoading(false);
     }
   };
+  
 
   const handleDownloadVideo = () => {
     const link = document.createElement("a");
@@ -162,6 +171,7 @@ function App() {
         >
           <h3>Processed Video</h3>
           <video
+            key={videoUrl} // React re-renders the video element when URL changes
             controls
             style={{ width: "80%", maxWidth: "600px", borderRadius: "10px" }}
           >

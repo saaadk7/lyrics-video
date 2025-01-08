@@ -14,13 +14,21 @@ const validateRoute = require("./routes/validate");
 const downloadRoute = require("./routes/download");
 const processRoute = require("./routes/process");
 
+// Register API routes
 app.use("/api/validate-url", validateRoute);
 app.use("/api/download", downloadRoute);
 app.use("/api/process", processRoute);
 
-// Serve frontend build
-const frontendPath = path.join(__dirname, "../frontend/build");
+// Serve output directory for processed videos
+const outputPath = path.join(__dirname, "output");
+if (!fs.existsSync(outputPath)) {
+  fs.mkdirSync(outputPath); // Ensure the output directory exists
+}
+//app.use("/output", express.static(outputPath));
+app.use("/output", express.static(path.join(__dirname, "output")));
 
+// Serve frontend build for production or development
+const frontendPath = path.join(__dirname, "../frontend/build");
 if (process.env.NODE_ENV === "production" || fs.existsSync(frontendPath)) {
   app.use(express.static(frontendPath));
 
