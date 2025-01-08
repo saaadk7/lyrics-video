@@ -19,6 +19,7 @@ commands = ["npm run build --prefix frontend"]
 commands = ["node backend/server.js"]
 
 [variables]
-# Specify required runtime environments
+
 NODE_ENV = "production"
 YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
+
