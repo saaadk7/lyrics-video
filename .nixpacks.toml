@@ -1,6 +1,7 @@
 [phases.setup]
 # Install root dependencies
 run = "npm install"
+run = "apt-get update && apt-get install -y python3"
 
 [phases.install]
 # Install frontend and backend dependencies
