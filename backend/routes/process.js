@@ -56,12 +56,14 @@ router.post("/", (req, res) => {
 
     const filters = [
       "[0:v]scale=1920:1080[bg]",
-      "[1:v]scale=1280:720[video]",
+      "[1:v]scale=1280:720,format=yuva444p,lutrgb=a=val*0.0[video]", // Set video opacity to 10%
       "[bg][video]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2[out]",
     ];
 
     if (subtitlesPath) {
-      filters.push(`[out]subtitles=${subtitlesPath}:force_style='Fontsize=24,PrimaryColour=&HFFFFFF&'[final]`);
+      filters.push(
+        `[out]subtitles=${subtitlesPath}:force_style='Fontsize=36,PrimaryColour=&HFFFFFF&,Alignment=3'[final]`
+      );
     }
 
     const filterComplex = subtitlesPath
@@ -72,17 +74,17 @@ router.post("/", (req, res) => {
       .input(BACKGROUND_IMAGE)
       .input(videoPath)
       .complexFilter(filterComplex, "final")
-      .outputOptions(["-c:v libx264", "-preset fast", "-crf 23"])
+      .outputOptions(["-c:v libx264", "-preset fast", "-crf 23", "-map 1:a", "-c:a aac", "-b:a 192k"])
       .save(outputPath)
       .on("end", () => {
         console.log("Video processing complete:", outputPath);
-      
+
         if (fs.existsSync(outputPath)) {
           console.log("Output video exists:", outputPath);
         } else {
           console.error("Output video not found:", outputPath);
         }
-      
+
         // Cleanup
         fs.unlink(videoPath, (err) => {
           if (err) {
@@ -91,7 +93,7 @@ router.post("/", (req, res) => {
             console.log("Input video deleted:", videoPath);
           }
         });
-      
+
         if (subtitlesPath) {
           fs.unlink(subtitlesPath, (err) => {
             if (err) {
@@ -101,15 +103,13 @@ router.post("/", (req, res) => {
             }
           });
         }
-      
+
         // Send the video URL to the frontend
         const videoUrl = `/output/${path.basename(outputPath)}`;
         console.log("Sending video URL to frontend:", videoUrl);
-      
+
         res.json({ videoUrl });
       })
-     
-      
       .on("error", (err) => {
         console.error("FFmpeg error:", err.message);
         res.status(500).json({ error: "Error processing video with FFmpeg", details: err.message });
@@ -118,4 +118,3 @@ router.post("/", (req, res) => {
 });
 
 module.exports = router;
-
