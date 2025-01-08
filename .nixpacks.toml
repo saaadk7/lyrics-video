@@ -1,0 +1,23 @@
+[phases.setup]
+# Install root dependencies
+run = "npm install"
+
+[phases.install]
+# Install frontend and backend dependencies
+commands = [
+  "npm install --prefix frontend",
+  "npm install --prefix backend"
+]
+
+[phases.build]
+# Build the React frontend
+commands = ["npm run build --prefix frontend"]
+
+[phases.start]
+# Start the backend server and serve the frontend
+commands = ["node backend/server.js"]
+
+[variables]
+# Specify required runtime environments
+NODE_ENV = "production"
+YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
