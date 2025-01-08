@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   const rawVideoPath = path.join(DOWNLOADS_DIR, `video_${uniqueId}`); // Path without extension
   const finalVideoPath = path.join(DOWNLOADS_DIR, `video_${uniqueId}.mp4`); // Final MP4 file
 
-  const command = `yt-dlp -f bestvideo+bestaudio --merge-output-format mp4 -o "${rawVideoPath}.%(ext)s" "${youtubeURL}"`; // Download and merge with correct format
+  const command = `yt-dlp -f best -o "${rawVideoPath}.%(ext)s" "${youtubeURL}"`; // Download with correct extension
   console.log("Executing command:", command);
 
   exec(command, (error, stdout, stderr) => {
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
     if (path.extname(downloadedFilePath) === ".mp4") {
       fs.renameSync(downloadedFilePath, finalVideoPath);
       console.log("Video successfully downloaded in MP4 format:", finalVideoPath);
-      return res.json({ videoPath: `/downloads/${path.basename(finalVideoPath)}` });
+      return res.json({ videoPath: finalVideoPath });
     }
 
     // Convert to MP4 using FFmpeg if not already in MP4 format
@@ -59,16 +59,10 @@ router.post("/", async (req, res) => {
         // Remove the original non-MP4 file
         fs.unlinkSync(downloadedFilePath);
 
-        return res.json({ videoPath: `/downloads/${path.basename(finalVideoPath)}` });
+        return res.json({ videoPath: finalVideoPath });
       })
       .on("error", (err) => {
         console.error("Error converting video to MP4:", err.message);
-
-        // Clean up partially processed files
-        if (fs.existsSync(finalVideoPath)) {
-          fs.unlinkSync(finalVideoPath);
-        }
-
         return res.status(500).json({ error: "Error converting video to MP4", details: err.message });
       })
       .run();
