@@ -5,6 +5,11 @@ const fs = require("fs");
 
 const app = express();
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
+
 // Middleware
 app.use(express.json());
 app.use(cors());
