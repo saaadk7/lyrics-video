@@ -1,7 +1,9 @@
 [phases.setup]
 # Install root dependencies
 run = "npm install"
-run = "apt-get update && apt-get install -y python3"
+[phases.setup]
+run = "python3 --version && npm install"
+
 
 [phases.install]
 # Install frontend and backend dependencies
@@ -17,6 +19,10 @@ commands = ["npm run build --prefix frontend"]
 [phases.start]
 # Start the backend server and serve the frontend
 commands = ["node backend/server.js"]
+
+[dependencies]
+packages = ["python3"]
+cache = true
 
 [variables]
 
