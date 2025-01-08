@@ -1,0 +1,37 @@
+[phases]
+# Phase to install required dependencies (Node.js 18 and Python 3.9 for yt-dlp)
+setup = "nix-env -iA nixpkgs.nodejs-18_x nixpkgs.python39"
+
+# Phase to install backend dependencies
+install-backend = "cd backend && npm install"
+
+# Phase to install frontend dependencies
+install-frontend = "cd frontend && npm install"
+
+# Phase to build the frontend React app
+build-frontend = "cd frontend && npm run build"
+
+# Phase to start the backend server (ensure it serves the frontend build)
+start-backend = "cd backend && node server.js"
+
+[variables]
+# Environment variable for backend
+NODE_ENV = "production"
+
+# Allow yt-dlp to work properly
+YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
+
+[dependencies]
+# Install system-level dependencies required for ffmpeg and yt-dlp
+system = [
+  "ffmpeg",
+  "yt-dlp"
+]
+
+[directories]
+# Specify which directories to include in the build
+include = [
+  "frontend/",
+  "backend/",
+  ".nixpacks.toml"
+]
