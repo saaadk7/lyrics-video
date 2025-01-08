@@ -37,7 +37,7 @@ app.use("/output", express.static(path.join(__dirname, "output")));
 // Serve frontend build for production or development
 const frontendPath = path.join(__dirname, "../frontend/build");
 if (process.env.NODE_ENV === "production" || fs.existsSync(frontendPath)) {
-  app.use(express.static(frontendPath));
+  app.use(express.static(frontendBuildPath));
 
   // Catch-all for React routes
   app.get("*", (req, res) => {
