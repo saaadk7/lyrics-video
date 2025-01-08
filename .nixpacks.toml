@@ -22,10 +22,11 @@ commands = ["node backend/server.js"]
 
 [dependencies]
 packages = ["python3"]
-# cache = true
+ cache = true
 
 [variables]
 
 NODE_ENV = "production"
 YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
+REACT_APP_API_URL=https://lyrics-video-production.up.railway.app
 
