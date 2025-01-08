@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === "production" || fs.existsSync(frontendPath)) {
 } else {
   console.warn("Frontend build not found. Backend running without frontend.");
 }
-
+require('dotenv').config();
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
