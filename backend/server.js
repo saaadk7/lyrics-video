@@ -35,13 +35,13 @@ if (!fs.existsSync(outputPath)) {
 app.use("/output", express.static(path.join(__dirname, "output")));
 
 // Serve frontend build for production or development
-const frontendPath = path.join(__dirname, "../frontend/build");
-if (process.env.NODE_ENV === "production" || fs.existsSync(frontendPath)) {
+const frontendBuildPath = path.join(__dirname, "../frontend/build");
+if (process.env.NODE_ENV === "production" || fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
 
   // Catch-all for React routes
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(frontendPath, "index.html"));
+    res.sendFile(path.resolve(frontendBuildPath, "index.html"));
   });
 } else {
   console.warn("Frontend build not found. Backend running without frontend.");
