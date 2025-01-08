@@ -1,15 +1,15 @@
 {
-    "name": "lyrics-video-maker",
-    "version": "1.0.0",
-    "scripts": {
-      "install-client": "cd frontend && npm install",
-      "install-server": "cd backend && npm install",
-      "build-client": "cd frontend && npm run build",
-      "start-server": "cd backend && node server.js",
-      "start": "npm run build-client && npm run start-server"
-    },
-    "engines": {
-      "node": "16.x"
-    }
+  "name": "lyrics-video-maker",
+  "version": "1.0.0",
+  "scripts": {
+    "install-client": "cd frontend && npm install",
+    "install-server": "cd backend && npm install",
+    "postinstall": "npm run install-client && npm run install-server",
+    "build-client": "cd frontend && npm run build",
+    "start-server": "cd backend && node server.js",
+    "start": "npm run build-client && npm run start-server"
+  },
+  "engines": {
+    "node": "16.x"
   }
-  
+}
