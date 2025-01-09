@@ -13,18 +13,31 @@ process.on("uncaughtException", (err) => {
 
 // Middleware to parse JSON
 app.use(express.json());
-
-// CORS setup
-const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3000",
-];
+// Middleware
+app.use(express.json());
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
+// CORS setup
+const cors = require("cors");
+
+const allowedOrigins = [
+  "https://lyrics-video-production.up.railway.app", // Frontend URL
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+  })
+);
+
 
 // Routes
 const validateRoute = require("./routes/validate");
@@ -47,19 +60,20 @@ app.use("/output", express.static(outputPath));
 
 // Serve frontend build for production or development
 const frontendBuildPath = path.join(__dirname, "../frontend/build");
+
 if (process.env.NODE_ENV === "production" || fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
-
-  // Catch-all route for React frontend
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(frontendBuildPath, "index.html"));
   });
-} else {
+}
+
+ else {
   console.warn("Frontend build not found. Backend running without frontend.");
 }
 
 // Start the server
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000 || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
