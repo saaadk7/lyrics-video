@@ -15,9 +15,10 @@ commands = ["npm run build --prefix frontend"]
 
 [phases.start]
 # Serve the React build and start the backend server
-commands = [
-  "cd backend && node server.js"
-]
+[phases.start]
+# Start the backend, which also serves the frontend
+commands = ["node backend/server.js"]
+
 
 [dependencies]
 # Ensure Python3 is available for youtube-dl and caching is enabled
