@@ -1,7 +1,6 @@
 [phases.setup]
 # Install root dependencies
 run = "npm install"
-[phases.setup]
 run = "python3 --version && npm install"
 
 
