@@ -1,8 +1,8 @@
 [phases.setup]
 run = """
 apt-get update &&
-apt-get install -y python3 python3-pip &&
-pip3 install yt-dlp &&
+apt-get install -y python3 python3-pip ffmpeg &&
+pip3 install yt-dlp
 npm install
 """
 
@@ -17,8 +17,6 @@ commands = [
 # Build the frontend React application
 commands = ["npm run build --prefix frontend"]
 
-[phases.start]
-# Serve the React build and start the backend server
 [phases.start]
 # Start the backend, which also serves the frontend
 commands = ["node backend/server.js"]
