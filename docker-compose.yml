@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    volumes:
+      - /Users/sayyadaamer/react-projects/lyrics-app/backend:/app/backend
+      - ./frontend/build:/app/frontend/build
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      FRONTEND_URL: http://localhost:80
+      YT_DLP_PATH: /usr/local/bin/yt-dlp
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - /Users/sayyadaamer/react-projects/lyrics-app/frontend:/app/frontend
+    ports:
+      - "80:80"
