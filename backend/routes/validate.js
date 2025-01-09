@@ -4,7 +4,7 @@ const { exec } = require("child_process");
 const router = express.Router();
 
 // Full path to the yt-dlp binary (use environment variable or fallback)
-const YT_DLP_PATH = process.env.YT_DLP_PATH || "/Library/Frameworks/Python.framework/Versions/3.13/bin/yt-dlp";
+const YT_DLP_PATH = process.env.YT_DLP_PATH || "/Library/Frameworks/Python.framework/Versions/3.13/bin/yt-dlp" || "yt-dlp";
 
 router.post("/", (req, res) => {
   const { youtubeURL } = req.body;

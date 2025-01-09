@@ -30,5 +30,5 @@ cache = true
 NODE_ENV = "production"
 PORT = "4000"
 FRONTEND_URL = "https://lyrics-video-production.up.railway.app"
-REACT_APP_API_URL = "/api"
+REACT_APP_API_URL = "https://lyrics-video-production.up.railway.app/api"
 YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"

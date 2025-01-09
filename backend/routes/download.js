@@ -5,6 +5,8 @@ const fs = require("fs");
 const ffmpeg = require("fluent-ffmpeg");
 
 const router = express.Router();
+const YT_DLP_PATH = process.env.YT_DLP_PATH || "yt-dlp";
+
 
 const DOWNLOADS_DIR = path.join(__dirname, "../downloads");
 if (!fs.existsSync(DOWNLOADS_DIR)) {
