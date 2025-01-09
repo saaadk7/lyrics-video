@@ -2,14 +2,22 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-require("dotenv").config(); //
+require("dotenv").config(); // Load environment variables
+
 const app = express();
 
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
+// Handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
 });
 
-const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
+// Middleware to parse JSON
+app.use(express.json());
+
+// CORS setup
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3000",
+];
 app.use(
   cors({
     origin: allowedOrigins,
@@ -17,11 +25,6 @@ app.use(
     credentials: true,
   })
 );
-
-
-// Middleware
-app.use(express.json());
-app.use(cors());
 
 // Routes
 const validateRoute = require("./routes/validate");
@@ -33,27 +36,28 @@ app.use("/api/validate-url", validateRoute);
 app.use("/api/download", downloadRoute);
 app.use("/api/process", processRoute);
 
-// Serve output directory for processed videos
+// Ensure the output directory exists
 const outputPath = path.join(__dirname, "output");
 if (!fs.existsSync(outputPath)) {
-  fs.mkdirSync(outputPath); // Ensure the output directory exists
+  fs.mkdirSync(outputPath);
 }
-//app.use("/output", express.static(outputPath));
-app.use("/output", express.static(path.join(__dirname, "output")));
+
+// Serve the output directory for processed videos
+app.use("/output", express.static(outputPath));
 
 // Serve frontend build for production or development
 const frontendBuildPath = path.join(__dirname, "../frontend/build");
 if (process.env.NODE_ENV === "production" || fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
 
-  // Catch-all for React routes
+  // Catch-all route for React frontend
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(frontendBuildPath, "index.html"));
   });
 } else {
   console.warn("Frontend build not found. Backend running without frontend.");
 }
-require('dotenv').config();
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
