@@ -12,8 +12,20 @@ console.log("Using yt-dlp path:", YT_DLP_PATH);
 const app = express();
 
 // Handle uncaught exceptions
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
+app.get("/debug/shell", async (req, res) => {
+  const { exec } = require("child_process");
+
+  exec("which yt-dlp", (error, stdout, stderr) => {
+    if (error) {
+      console.error("Error:", error.message);
+      return res.status(500).json({ error: "Command failed", details: error.message });
+    }
+
+    res.json({
+      stdout: stdout.trim(),
+      stderr: stderr.trim(),
+    });
+  });
 });
 
 // Middleware to parse JSON
