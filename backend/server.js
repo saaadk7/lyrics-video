@@ -13,31 +13,29 @@ process.on("uncaughtException", (err) => {
 
 // Middleware to parse JSON
 app.use(express.json());
-// Middleware
-app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
 
 // CORS setup
-const cors = require("cors");
-
 const allowedOrigins = [
-  "https://lyrics-video-production.up.railway.app", // Frontend URL
+  process.env.FRONTEND_URL || "http://localhost:3000",
+  "https://lyrics-video-production.up.railway.app", // Add your deployed frontend URL here
 ];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
+// Ensure the output directory exists
+const outputPath = path.join(__dirname, "output");
+if (!fs.existsSync(outputPath)) {
+  fs.mkdirSync(outputPath);
+}
+
+// Serve the output directory for processed videos
+app.use("/output", express.static(outputPath));
 
 // Routes
 const validateRoute = require("./routes/validate");
@@ -49,31 +47,27 @@ app.use("/api/validate-url", validateRoute);
 app.use("/api/download", downloadRoute);
 app.use("/api/process", processRoute);
 
-// Ensure the output directory exists
-const outputPath = path.join(__dirname, "output");
-if (!fs.existsSync(outputPath)) {
-  fs.mkdirSync(outputPath);
-}
-
-// Serve the output directory for processed videos
-app.use("/output", express.static(outputPath));
-
-// Serve frontend build for production or development
+// Serve frontend build in production
 const frontendBuildPath = path.join(__dirname, "../frontend/build");
 
-if (process.env.NODE_ENV === "production" || fs.existsSync(frontendBuildPath)) {
-  app.use(express.static(frontendBuildPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(frontendBuildPath, "index.html"));
-  });
-}
+if (process.env.NODE_ENV === "production") {
+  if (fs.existsSync(frontendBuildPath)) {
+    console.log("Serving frontend build...");
+    app.use(express.static(frontendBuildPath));
 
- else {
-  console.warn("Frontend build not found. Backend running without frontend.");
+    // Catch-all route for React
+    app.get("*", (req, res) => {
+      res.sendFile(path.resolve(frontendBuildPath, "index.html"));
+    });
+  } else {
+    console.warn("Frontend build not found. Please ensure the frontend is built.");
+  }
+} else {
+  console.warn("Running in development mode. Frontend not served.");
 }
 
 // Start the server
-const PORT = process.env.PORT || 4000 || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
