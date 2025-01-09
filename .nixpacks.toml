@@ -1,30 +1,31 @@
 [phases.setup]
-# Install root dependencies
-run = "npm install"
+# Ensure Python and Node.js dependencies are available
 run = "python3 --version && npm install"
 
-
 [phases.install]
-# Install frontend and backend dependencies
+# Install dependencies for both frontend and backend
 commands = [
   "npm install --prefix frontend",
   "npm install --prefix backend"
 ]
 
 [phases.build]
-# Build the React frontend
+# Build the frontend React application
 commands = ["npm run build --prefix frontend"]
 
 [phases.start]
-# Start the backend server and serve the frontend
-commands = ["node backend/server.js"]
+# Serve the React build and start the backend server
+commands = [
+  "cd backend && node server.js"
+]
 
 [dependencies]
+# Ensure Python3 is available for youtube-dl and caching is enabled
 packages = ["python3"]
- cache = true
+cache = true
 
 [variables]
-
+# Environment variables for frontend and backend communication
 NODE_ENV = "production"
 PORT = "4000"
 FRONTEND_URL = "https://lyrics-video-production.up.railway.app"
