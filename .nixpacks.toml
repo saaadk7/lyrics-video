@@ -28,6 +28,7 @@ commands = ["node backend/server.js"]
 # Ensure Python3 is available for youtube-dl and caching is enabled
 packages = ["python3", "python3-pip"]
 cache = true
+packages = ["yt-dlp"]
 
 [variables]
 # Environment variables for frontend and backend communication
