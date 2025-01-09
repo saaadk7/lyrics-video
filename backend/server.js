@@ -5,13 +5,8 @@ const fs = require("fs");
 require("dotenv").config(); // Load environment variables
 const { execSync } = require("child_process");
 
-let YT_DLP_PATH;
-try {
-  YT_DLP_PATH = execSync("which yt-dlp").toString().trim();
-} catch {
-  YT_DLP_PATH = "yt-dlp"; // Fallback to default
-}
-console.log("YT_DLP_PATH:", YT_DLP_PATH);
+const YT_DLP_PATH = process.env.YT_DLP_PATH || "yt-dlp";
+console.log("Using yt-dlp path:", YT_DLP_PATH);
 
 
 const app = express();
